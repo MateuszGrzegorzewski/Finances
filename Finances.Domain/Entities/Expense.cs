@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Finances.Domain.Entities
 {
-    public class Expanse
+    public class Expense
     {
         public int Id { get; set; }
         public float Value { get; set; }

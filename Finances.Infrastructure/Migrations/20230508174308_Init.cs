@@ -12,7 +12,7 @@ namespace Finances.Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Expanses",
+                name: "Expenses",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -24,7 +24,7 @@ namespace Finances.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Expanses", x => x.Id);
+                    table.PrimaryKey("PK_Expenses", x => x.Id);
                 });
         }
 
@@ -32,7 +32,7 @@ namespace Finances.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Expanses");
+                name: "Expenses");
         }
     }
 }

@@ -4,19 +4,16 @@ using Finances.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
 namespace Finances.Infrastructure.Migrations
 {
-    [DbContext(typeof(ExpanseDbContext))]
-    [Migration("20230508112216_Init")]
-    partial class Init
+    [DbContext(typeof(ExpenseDbContext))]
+    partial class ExpenseDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,7 +22,7 @@ namespace Finances.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Finances.Domain.Entities.Expanse", b =>
+            modelBuilder.Entity("Finances.Domain.Entities.Expense", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -48,7 +45,7 @@ namespace Finances.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Expanses");
+                    b.ToTable("Expenses");
                 });
 #pragma warning restore 612, 618
         }

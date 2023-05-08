@@ -1,4 +1,6 @@
-﻿using Finances.Infrastructure.Persistence;
+﻿using Finances.Domain.Interfaces;
+using Finances.Infrastructure.Persistence;
+using Finances.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,8 +17,10 @@ namespace Finances.Infrastructure.Extensions
     {
         public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<ExpanseDbContext>(options => options.UseSqlServer(
-                configuration.GetConnectionString("Expanse")));
+            services.AddDbContext<ExpenseDbContext>(options => options.UseSqlServer(
+                configuration.GetConnectionString("Expense")));
+
+            services.AddScoped<IExpenseRepository, ExpenseRepository>();
         }
     }
 }

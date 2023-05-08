@@ -1,16 +1,15 @@
 ﻿using Finances.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Finances.Infrastructure.Extensions;
+using Finances.Application.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
-//Instead of this below, I create AddInfrastructure
-//builder.Services.AddDbContext<ExpanseDbContext>(options
-//    => options.UseSqlServer(builder.Configuration.GetConnectionString("Expanse") ?? throw new InvalidOperationException("Connection string 'Expanse' not found.")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddApplication();
 
 var app = builder.Build();
 
