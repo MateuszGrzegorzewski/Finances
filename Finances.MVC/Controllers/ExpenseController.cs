@@ -12,6 +12,11 @@ namespace Finances.MVC.Controllers
             _expenseService = expenseService;
         }
 
+        public IActionResult Create()
+        {
+            return View();
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create(Domain.Entities.Expense expense)
         {
