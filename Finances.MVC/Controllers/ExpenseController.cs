@@ -21,6 +21,11 @@ namespace Finances.MVC.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(ExpenseDto expense)
         {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
             await _expenseService.Create(expense);
             return RedirectToAction(nameof(Create)); //TODO: refactor
         }
