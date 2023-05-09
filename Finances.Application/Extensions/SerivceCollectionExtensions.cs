@@ -1,4 +1,5 @@
-﻿using Finances.Application.Services;
+﻿using Finances.Application.Mappings;
+using Finances.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,8 @@ namespace Finances.Application.Extensions
         public static void AddApplication(this IServiceCollection services)
         {
             services.AddScoped<IExpenseService, ExpenseService>();
+
+            services.AddAutoMapper(typeof(ExpenseMappingProfile));
         }
     }
 }

@@ -1,9 +1,9 @@
-﻿using Finances.Domain.Entities;
+﻿using Finances.Application.Expense;
 
 namespace Finances.Application.Services
 {
     public interface IExpenseService
     {
-        Task Create(Expense expense);
+        Task Create(ExpenseDto expense);
     }
 }

@@ -1,4 +1,5 @@
-﻿using Finances.Application.Services;
+﻿using Finances.Application.Expense;
+using Finances.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Finances.MVC.Controllers
@@ -18,7 +19,7 @@ namespace Finances.MVC.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Domain.Entities.Expense expense)
+        public async Task<IActionResult> Create(ExpenseDto expense)
         {
             await _expenseService.Create(expense);
             return RedirectToAction(nameof(Create)); //TODO: refactor
