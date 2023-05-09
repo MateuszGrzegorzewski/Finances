@@ -1,6 +1,7 @@
 ﻿using Finances.Domain.Entities;
 using Finances.Domain.Interfaces;
 using Finances.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,5 +24,8 @@ namespace Finances.Infrastructure.Repositories
             _dbContext.Add(expense);
             await _dbContext.SaveChangesAsync();
         }
+
+        public async Task<IEnumerable<Expense>> GetAll()
+        => await _dbContext.Expenses.ToListAsync();
     }
 }

@@ -26,5 +26,13 @@ namespace Finances.Application.Services
 
             await _expenseRepository.Create(expense);
         }
+
+        public async Task<IEnumerable<ExpenseDto>> GetAll()
+        {
+            var expenses = await _expenseRepository.GetAll();
+            var dtos = _mapper.Map<IEnumerable<ExpenseDto>>(expenses);
+
+            return dtos;
+        }
     }
 }

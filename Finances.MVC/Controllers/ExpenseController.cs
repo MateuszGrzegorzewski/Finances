@@ -13,6 +13,12 @@ namespace Finances.MVC.Controllers
             _expenseService = expenseService;
         }
 
+        public async Task<IActionResult> Index()
+        {
+            var expenses = await _expenseService.GetAll();
+            return View(expenses);
+        }
+
         public IActionResult Create()
         {
             return View();
@@ -27,7 +33,7 @@ namespace Finances.MVC.Controllers
             }
 
             await _expenseService.Create(expense);
-            return RedirectToAction(nameof(Create)); //TODO: refactor
+            return RedirectToAction(nameof(Index));
         }
     }
 }

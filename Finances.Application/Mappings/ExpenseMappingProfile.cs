@@ -13,6 +13,8 @@ namespace Finances.Application.Mappings
         public ExpenseMappingProfile()
         {
             CreateMap<ExpenseDto, Domain.Entities.Expense>();
+
+            CreateMap<Domain.Entities.Expense, ExpenseDto>();
         }
     }
 }
