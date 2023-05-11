@@ -28,6 +28,12 @@ namespace Finances.Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
+        public async Task Delete(Expense expense)
+        {
+            _dbContext.Remove(expense);
+            await _dbContext.SaveChangesAsync();
+        }
+
         public async Task<IEnumerable<Expense>> GetAll()
         => await _dbContext.Expenses.ToListAsync();
 

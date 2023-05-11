@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Finances.Application.Expense.Commands.CreateExpense;
+using Finances.Application.Expense.Commands.DeleteExpense;
 using Finances.Application.Expense.Commands.EditExpense;
 using Finances.Application.Expense.Query.GetAllExpenses;
 using Finances.Application.Expense.Query.GetByIdExpense;
@@ -45,6 +46,13 @@ namespace Finances.MVC.Controllers
             return View(model);
         }
 
+        public async Task<IActionResult> Delete(int id)
+        {
+            var dto = await _mediator.Send(new GetByIdExpenseQuery(id));
+
+            return View(dto);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create(CreateExpenseCommand command)
         {
@@ -65,6 +73,13 @@ namespace Finances.MVC.Controllers
                 return View();
             }
 
+            await _mediator.Send(command);
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id, DeleteExpenseCommand command)
+        {
             await _mediator.Send(command);
             return RedirectToAction(nameof(Index));
         }

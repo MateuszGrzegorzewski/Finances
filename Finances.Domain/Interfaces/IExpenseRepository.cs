@@ -15,5 +15,7 @@ namespace Finances.Domain.Interfaces
         Task<Entities.Expense> GetById(int id);
 
         Task Commit();
+
+        Task Delete(Entities.Expense expense);
     }
 }
