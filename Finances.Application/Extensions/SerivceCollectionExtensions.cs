@@ -1,6 +1,5 @@
-﻿using Finances.Application.Expense;
+﻿using Finances.Application.Expense.Commands.CreateExpense;
 using Finances.Application.Mappings;
-using Finances.Application.Services;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,11 +15,11 @@ namespace Finances.Application.Extensions
     {
         public static void AddApplication(this IServiceCollection services)
         {
-            services.AddScoped<IExpenseService, ExpenseService>();
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining(typeof(CreateExpenseCommand)));
 
             services.AddAutoMapper(typeof(ExpenseMappingProfile));
 
-            services.AddValidatorsFromAssemblyContaining<ExpenseDtoValidator>()
+            services.AddValidatorsFromAssemblyContaining<CreateExpenseCommandValidator>()
                 .AddFluentValidationAutoValidation()
                 .AddFluentValidationClientsideAdapters();
         }

@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Finances.Application.Expense
+namespace Finances.Application.Expense.Commands.CreateExpense
 {
-    public class ExpenseDtoValidator : AbstractValidator<ExpenseDto>
+    public class CreateExpenseCommandValidator : AbstractValidator<CreateExpenseCommand>
     {
-        public ExpenseDtoValidator()
+        public CreateExpenseCommandValidator()
         {
             RuleFor(c => c.Value)
                 .NotEmpty().WithMessage("Please enter value.")
