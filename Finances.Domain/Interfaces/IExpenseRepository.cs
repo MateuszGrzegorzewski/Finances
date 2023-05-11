@@ -13,5 +13,7 @@ namespace Finances.Domain.Interfaces
         Task<IEnumerable<Entities.Expense>> GetAll();
 
         Task<Entities.Expense> GetById(int id);
+
+        Task Commit();
     }
 }

@@ -19,6 +19,9 @@ namespace Finances.Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
+        public async Task Commit()
+        => await _dbContext.SaveChangesAsync();
+
         public async Task Create(Expense expense)
         {
             _dbContext.Add(expense);

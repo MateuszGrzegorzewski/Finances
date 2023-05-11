@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Finances.Application.Expense;
+using Finances.Application.Expense.Commands.EditExpense;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,8 @@ namespace Finances.Application.Mappings
             CreateMap<ExpenseDto, Domain.Entities.Expense>();
 
             CreateMap<Domain.Entities.Expense, ExpenseDto>();
+
+            CreateMap<ExpenseDto, EditExpenseCommand>();
         }
     }
 }
