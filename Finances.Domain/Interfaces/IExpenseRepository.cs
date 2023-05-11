@@ -8,8 +8,10 @@ namespace Finances.Domain.Interfaces
 {
     public interface IExpenseRepository
     {
-        Task Create(Domain.Entities.Expense expense);
+        Task Create(Entities.Expense expense);
 
-        Task<IEnumerable<Domain.Entities.Expense>> GetAll();
+        Task<IEnumerable<Entities.Expense>> GetAll();
+
+        Task<Entities.Expense> GetById(int id);
     }
 }
