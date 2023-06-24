@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Finances.Infrastructure.Extensions;
 using Finances.Application.Extensions;
+using Finances.Infrastructure.Seeders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +13,12 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
 
 var app = builder.Build();
+
+var scope = app.Services.CreateScope();
+
+var seeder = scope.ServiceProvider.GetRequiredService<CategorySeeder>();
+
+await seeder.Seed();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

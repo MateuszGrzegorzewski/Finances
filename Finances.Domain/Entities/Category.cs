@@ -13,6 +13,6 @@ namespace Finances.Domain.Entities
         public string Name { get; set; } = default!;
         public string EncodedName { get; private set; } = default!;
 
-        public void EncodemName() => EncodedName = Name.ToLower().Replace(" ", "-");
+        public void EncodeName() => EncodedName = Name.ToLower().Replace(" ", "-");
     }
 }

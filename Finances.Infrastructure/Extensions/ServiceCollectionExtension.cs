@@ -1,6 +1,7 @@
 ﻿using Finances.Domain.Interfaces;
 using Finances.Infrastructure.Persistence;
 using Finances.Infrastructure.Repositories;
+using Finances.Infrastructure.Seeders;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,6 +22,8 @@ namespace Finances.Infrastructure.Extensions
                 configuration.GetConnectionString("Expense")));
 
             services.AddScoped<IExpenseRepository, ExpenseRepository>();
+
+            services.AddScoped<CategorySeeder>();
         }
     }
 }
