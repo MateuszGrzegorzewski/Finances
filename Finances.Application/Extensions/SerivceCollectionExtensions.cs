@@ -1,4 +1,5 @@
-﻿using Finances.Application.Expense.Commands.CreateExpense;
+﻿using Finances.Application.Expense.Commands.CreateCategory;
+using Finances.Application.Expense.Commands.CreateExpense;
 using Finances.Application.Mappings;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -16,8 +17,10 @@ namespace Finances.Application.Extensions
         public static void AddApplication(this IServiceCollection services)
         {
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining(typeof(CreateExpenseCommand)));
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining(typeof(CreateCategoryCommand)));
 
             services.AddAutoMapper(typeof(ExpenseMappingProfile));
+            services.AddAutoMapper(typeof(CategoryMappingProfile));
 
             services.AddValidatorsFromAssemblyContaining<CreateExpenseCommandValidator>()
                 .AddFluentValidationAutoValidation()

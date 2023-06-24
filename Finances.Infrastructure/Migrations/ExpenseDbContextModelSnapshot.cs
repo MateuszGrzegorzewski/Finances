@@ -40,7 +40,7 @@ namespace Finances.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("Finances.Domain.Entities.Expense", b =>
@@ -66,7 +66,7 @@ namespace Finances.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Expenses");
+                    b.ToTable("Expenses", (string)null);
                 });
 #pragma warning restore 612, 618
         }
