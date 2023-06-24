@@ -9,5 +9,7 @@ namespace Finances.Infrastructure.Persistence
         }
 
         public DbSet<Domain.Entities.Expense> Expenses { get; set; }
+
+        public DbSet<Domain.Entities.Category> Categories { get; set; }
     }
 }
