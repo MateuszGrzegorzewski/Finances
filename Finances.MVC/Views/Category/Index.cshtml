@@ -1,0 +1,26 @@
+﻿@model IEnumerable<Finances.Application.Expense.CategoryDto>
+
+@{
+    ViewData["Title"] = "Categories";
+}
+
+<h1>Categories</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-outline-secondary">Create category</a>
+</p>
+
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="card" style="width: 18rem;">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">@item.Name</li>
+            </ul>
+@*            <div class="card-body">
+                <a class="btn btn-primary" asp-controller="Expense" asp-action="Details" asp-route-id="@item.Id">Details</a>
+                <a class="btn btn-outline-primary" asp-controller="Expense" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </div>*@
+        </div>
+    }
+</div>

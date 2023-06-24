@@ -11,5 +11,7 @@ namespace Finances.Domain.Interfaces
         Task Create(Entities.Category category);
 
         Task<Entities.Category?> GetByName(string name);
+
+        Task<IEnumerable<Entities.Category>> GetAll();
     }
 }

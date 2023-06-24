@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Finances.Application.Expense.Commands.CreateCategory;
+using Finances.Application.Expense.Query.GetAllCategories;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,7 +19,8 @@ namespace Finances.MVC.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View();
+            var categories = await _mediator.Send(new GetAllCategoriesQuery());
+            return View(categories);
         }
 
         public IActionResult Create()

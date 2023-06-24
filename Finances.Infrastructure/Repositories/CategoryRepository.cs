@@ -25,6 +25,9 @@ namespace Finances.Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
+        public async Task<IEnumerable<Category>> GetAll()
+            => await _dbContext.Categories.ToListAsync();
+
         public Task<Category?> GetByName(string name)
             => _dbContext.Categories.FirstOrDefaultAsync(x => x.Name.ToLower() == name.ToLower());
     }
