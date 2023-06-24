@@ -1,5 +1,7 @@
-﻿using Finances.Domain.Interfaces;
+﻿using Finances.Domain.Entities;
+using Finances.Domain.Interfaces;
 using Finances.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,10 +19,13 @@ namespace Finances.Infrastructure.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task Create(Domain.Entities.Category category)
+        public async Task Create(Category category)
         {
             _dbContext.Add(category);
             await _dbContext.SaveChangesAsync();
         }
+
+        public Task<Category?> GetByName(string name)
+            => _dbContext.Categories.FirstOrDefaultAsync(x => x.Name.ToLower() == name.ToLower());
     }
 }

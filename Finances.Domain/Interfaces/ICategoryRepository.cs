@@ -8,6 +8,8 @@ namespace Finances.Domain.Interfaces
 {
     public interface ICategoryRepository
     {
-        Task Create(Domain.Entities.Category category);
+        Task Create(Entities.Category category);
+
+        Task<Entities.Category?> GetByName(string name);
     }
 }
