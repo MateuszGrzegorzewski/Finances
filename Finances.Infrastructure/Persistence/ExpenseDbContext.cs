@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Finances.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Finances.Infrastructure.Persistence
 {
@@ -8,8 +9,16 @@ namespace Finances.Infrastructure.Persistence
         {
         }
 
-        public DbSet<Domain.Entities.Expense> Expenses { get; set; }
+        public DbSet<Expense> Expenses { get; set; }
 
-        public DbSet<Domain.Entities.Category> Categories { get; set; }
+        public DbSet<Category> Categories { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Expense>()
+                .HasOne(e => e.Category)
+                .WithMany()
+                .HasForeignKey(e => e.CategoryId);
+        }
     }
 }

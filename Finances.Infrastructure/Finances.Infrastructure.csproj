@@ -17,5 +17,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Finances.Application\Finances.Application.csproj" />
   </ItemGroup>
+	
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
 
 </Project>

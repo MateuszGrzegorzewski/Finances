@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Finances.Application.Expense;
 using Finances.Application.Expense.Commands.EditExpense;
+using Finances.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,11 +14,14 @@ namespace Finances.Application.Mappings
     {
         public ExpenseMappingProfile()
         {
-            CreateMap<ExpenseDto, Domain.Entities.Expense>();
+            CreateMap<ExpenseDto, Domain.Entities.Expense>()
+                .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category));
 
-            CreateMap<Domain.Entities.Expense, ExpenseDto>();
+            CreateMap<Domain.Entities.Expense, ExpenseDto>()
+                .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category));
 
-            CreateMap<ExpenseDto, EditExpenseCommand>();
+            CreateMap<ExpenseDto, EditExpenseCommand>()
+                .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category));
         }
     }
 }
