@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Finances.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,10 +9,14 @@ namespace Finances.Domain.Interfaces
 {
     public interface ICategoryRepository
     {
-        Task Create(Entities.Category category);
+        Task Create(Category category);
 
-        Task<Entities.Category?> GetByName(string name);
+        Task<Category?> GetByName(string name);
 
-        Task<IEnumerable<Entities.Category>> GetAll();
+        Task<IEnumerable<Category>> GetAll();
+
+        Task<Category> GetByEncodedName(string encodedName);
+
+        Task Delete(Category category);
     }
 }

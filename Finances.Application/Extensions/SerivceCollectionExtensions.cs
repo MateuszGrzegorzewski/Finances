@@ -25,6 +25,9 @@ namespace Finances.Application.Extensions
             services.AddValidatorsFromAssemblyContaining<CreateExpenseCommandValidator>()
                 .AddFluentValidationAutoValidation()
                 .AddFluentValidationClientsideAdapters();
+            services.AddValidatorsFromAssemblyContaining<CreateCategoryCommandValidator>()
+                .AddFluentValidationAutoValidation()
+                .AddFluentValidationClientsideAdapters();
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Finances.Application.Expense.Commands.CreateCategory;
+using Finances.Application.Expense.Commands.DeleteCategory;
 using Finances.Application.Expense.Query.GetAllCategories;
+using Finances.Application.Expense.Query.GetByEncodedName;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,6 +30,14 @@ namespace Finances.MVC.Controllers
             return View();
         }
 
+        [Route("Category/Delete/{encodedName}")]
+        public async Task<IActionResult> Delete(string encodedName)
+        {
+            var dto = await _mediator.Send(new GetCategoryByEncodedNameQuery(encodedName));
+
+            return View(dto);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create(CreateCategoryCommand command)
         {
@@ -37,7 +47,15 @@ namespace Finances.MVC.Controllers
             }
 
             await _mediator.Send(command);
-            return RedirectToAction(nameof(Create));
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [Route("Category/Delete/{encodedName}")]
+        public async Task<IActionResult> Delete(string encodedName, DeleteCategoryCommand command)
+        {
+            await _mediator.Send(command);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

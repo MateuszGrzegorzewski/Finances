@@ -25,8 +25,17 @@ namespace Finances.Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
+        public async Task Delete(Category category)
+        {
+            _dbContext.Remove(category);
+            await _dbContext.SaveChangesAsync();
+        }
+
         public async Task<IEnumerable<Category>> GetAll()
             => await _dbContext.Categories.ToListAsync();
+
+        public async Task<Category> GetByEncodedName(string encodedName)
+            => await _dbContext.Categories.FirstAsync(x => x.EncodedName == encodedName);
 
         public Task<Category?> GetByName(string name)
             => _dbContext.Categories.FirstOrDefaultAsync(x => x.Name.ToLower() == name.ToLower());
