@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using Finances.Application.Expense.Query.GetAllCategories;
+using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.Linq;

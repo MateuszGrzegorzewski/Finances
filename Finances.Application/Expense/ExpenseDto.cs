@@ -12,7 +12,7 @@ namespace Finances.Application.Expense
     {
         public int Id { get; set; }
         public decimal Value { get; set; }
-        public Category Category { get; set; } = default!;
+        public string Category { get; set; } = default!;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public string? Description { get; set; }
     }

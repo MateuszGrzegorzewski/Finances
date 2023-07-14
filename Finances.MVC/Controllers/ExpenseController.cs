@@ -2,6 +2,7 @@
 using Finances.Application.Expense.Commands.CreateExpense;
 using Finances.Application.Expense.Commands.DeleteExpense;
 using Finances.Application.Expense.Commands.EditExpense;
+using Finances.Application.Expense.Query.GetAllCategories;
 using Finances.Application.Expense.Query.GetAllExpenses;
 using Finances.Application.Expense.Query.GetByIdExpense;
 using MediatR;
@@ -26,8 +27,11 @@ namespace Finances.MVC.Controllers
             return View(expenses);
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> CreateAsync()
         {
+            var categories = await _mediator.Send(new GetAllCategoriesQuery());
+            ViewBag.Categories = categories;
+
             return View();
         }
 
@@ -39,6 +43,9 @@ namespace Finances.MVC.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
+            var categories = await _mediator.Send(new GetAllCategoriesQuery());
+            ViewBag.Categories = categories;
+
             var dto = await _mediator.Send(new GetByIdExpenseQuery(id));
 
             EditExpenseCommand model = _mapper.Map<EditExpenseCommand>(dto);
@@ -58,6 +65,9 @@ namespace Finances.MVC.Controllers
         {
             if (!ModelState.IsValid)
             {
+                var categories = await _mediator.Send(new GetAllCategoriesQuery());
+                ViewBag.Categories = categories;
+
                 return View();
             }
 
@@ -70,6 +80,9 @@ namespace Finances.MVC.Controllers
         {
             if (!ModelState.IsValid)
             {
+                var categories = await _mediator.Send(new GetAllCategoriesQuery());
+                ViewBag.Categories = categories;
+
                 return View();
             }
 

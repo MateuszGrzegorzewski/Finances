@@ -10,15 +10,6 @@ namespace Finances.Infrastructure.Persistence
         }
 
         public DbSet<Expense> Expenses { get; set; }
-
         public DbSet<Category> Categories { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<Expense>()
-                .HasOne(e => e.Category)
-                .WithMany()
-                .HasForeignKey(e => e.CategoryId);
-        }
     }
 }
