@@ -18,7 +18,6 @@
             </div>
             <div class="form-group">
                 <label asp-for="Category" class="control-label"></label>
-                @*<input asp-for="Category" class="form-control" />*@
                 <select class="form-control" asp-for="Category">
                     <option value="">-- Select Category --</option>
                     @foreach (var category in ViewBag.Categories)

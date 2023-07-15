@@ -19,8 +19,6 @@ namespace Finances.Application.Expense.Commands.CreateExpense
 
             RuleFor(c => c.Category)
                 .NotEmpty().WithMessage("Please choose Category.");
-            //.MinimumLength(2)
-            //.MaximumLength(40);
 
             RuleFor(c => c.Description)
                 .MaximumLength(256).WithMessage("Description should have maximum of 256 characters.");
