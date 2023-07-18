@@ -1,4 +1,5 @@
-﻿using System;
+﻿//using Finances.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,5 +18,9 @@ namespace Finances.Domain.Interfaces
         Task Commit();
 
         Task Delete(Entities.Expense expense);
+
+        Task<IEnumerable<Entities.Expense>> GetAllByCategory(string category);
+
+        //Task<IEnumerable<Entities.Expense>> GetAllByCategory(Entities.Category category);
     }
 }

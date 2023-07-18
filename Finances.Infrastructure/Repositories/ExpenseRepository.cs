@@ -37,6 +37,9 @@ namespace Finances.Infrastructure.Repositories
         public async Task<IEnumerable<Expense>> GetAll()
         => await _dbContext.Expenses.ToListAsync();
 
+        public async Task<IEnumerable<Expense>> GetAllByCategory(string category)
+        => await _dbContext.Expenses.Where(x => x.Category == category).ToListAsync();
+
         public async Task<Expense> GetById(int id)
         => await _dbContext.Expenses.FirstAsync(x => x.Id == id);
     }

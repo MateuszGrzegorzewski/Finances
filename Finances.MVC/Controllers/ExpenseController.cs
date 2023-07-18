@@ -4,6 +4,7 @@ using Finances.Application.Expense.Commands.DeleteExpense;
 using Finances.Application.Expense.Commands.EditExpense;
 using Finances.Application.Expense.Query.GetAllCategories;
 using Finances.Application.Expense.Query.GetAllExpenses;
+using Finances.Application.Expense.Query.GetAllExpensesByCategory;
 using Finances.Application.Expense.Query.GetByIdExpense;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
