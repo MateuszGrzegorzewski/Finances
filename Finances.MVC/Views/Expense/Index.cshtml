@@ -14,25 +14,47 @@
     <form asp-controller="Expense" asp-action="Index" method="get">
         <label for="targetYear">Enter Target Year:</label>
         <input type="text" id="targetYear" name="targetYear" placeholder="YYYY" />
-        <button type="submit" class="btn btn-outline-primary">Calculate Total Expenses</button>
+        <button type="submit" class="btn btn-outline-primary">Calculate</button>
     </form>
-    <p>Total expenses in specific year: @ViewBag.TotalExpensesForYear</p>
+    <p>Total expenses by category for @ViewBag.Year:</p>
+    <ul>
+        @foreach (var kvp in ViewBag.TotalExpenseByCategoryForYear)
+        {
+            <li>@kvp.Key: @kvp.Value</li>
+        }
+    </ul>
+    <p>Total expenses in @ViewBag.Year: @ViewBag.TotalExpensesForYear</p>
 
     <form asp-controller="Expense" asp-action="Index" method="get">
         <label for="targetNumOfMonths">Enter number of last months:</label>
-        <input type="text" id="targetNumOfMonths" name="targetNumOfMonths" placeholder="X" />
-        <button type="submit" class="btn btn-outline-primary">Calculate Total Expenses</button>
+        <input type="text" id="targetNumOfMonths" name="targetNumOfMonths" placeholder="X"/>
+        <button type="submit" class="btn btn-outline-primary">Calculate</button>
     </form>
-    <p>Total expenses by specific last months: @ViewBag.TotalExpensesForLastMonths</p>
+    <p>Total expenses by category for @ViewBag.NumOfLastMonths last months:</p>
+    <ul>
+        @foreach (var kvp in ViewBag.TotalExpensesByCategoryForLastMonths)
+        {
+            <li>@kvp.Key: @kvp.Value</li>
+        }
+    </ul>
+    <p>Total expenses by  @ViewBag.NumOfLastMonths last months: @ViewBag.TotalExpensesForLastMonths</p>
 
     <form asp-controller="Expense" asp-action="Index" method="get">
         <label for="startDate">Start Date:</label>
         <input type="date" id="startDate" name="startDate" />
         <label for="endDate">End Date:</label>
         <input type="date" id="endDate" name="endDate" />
-        <button type="submit" class="btn btn-outline-primary">Calculate Total Expenses</button>
+        <button type="submit" class="btn btn-outline-primary">Calculate</button>
     </form>
-    <p>Total expenses for specific term: @ViewBag.TotalExpensesForTerm</p>
+    <p>Total expenses by category for the term: @ViewBag.StartDate to @ViewBag.EndDate:</p>
+    <ul>
+        @foreach (var kvp in ViewBag.TotalExpenseByCategoryInRange)
+        {
+            <li>@kvp.Key: @kvp.Value</li>
+        }
+    </ul>
+    <p>Total expenses for the Term: @ViewBag.StartDate to @ViewBag.EndDate: @ViewBag.TotalExpensesForTerm</p>
+
 </div>
 
 <div class="row">

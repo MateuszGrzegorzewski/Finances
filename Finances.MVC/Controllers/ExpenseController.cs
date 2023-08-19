@@ -29,44 +29,46 @@ namespace Finances.MVC.Controllers
 
         public async Task<IActionResult> Index(int? targetYear, int? targetNumOfMonths, DateTime startDate, DateTime endDate)
         {
-            //var expensesForCategoriesDictionary = new Dictionary<string, decimal?>();
-            //var categories = await _mediator.Send(new GetAllCategoriesQuery());
-
-            //foreach (var category in categories)
-            //{
-            //    var expensesByCategory = _mediator.Send(new GetAllExpensesByCategoryQuery(category.Name));
-
-            //    if (expensesByCategory != null)
-            //    {
-            //        var totalExpense = 0m;
-            //        foreach (var expense in await expensesByCategory)
-            //        {
-            //            totalExpense += expense.Value;
-            //        }
-            //        expensesForCategoriesDictionary.Add(category.Name, totalExpense);
-            //    }
-            //    else
-            //    {
-            //        expensesForCategoriesDictionary.Add(category.Name, 0);
-            //    }
-            //}
-
             var expenses = await _mediator.Send(new GetAllExpensesQuery());
 
             if (targetYear.HasValue)
             {
-                decimal totalExpensesForYear = await _expenseCalculation.totalExpensesByYear(targetYear.Value);
+                ViewBag.Year = targetYear.Value;
+
+                var totalExpensesForYear = await _expenseCalculation.totalExpensesByYear(targetYear.Value);
                 ViewBag.TotalExpensesForYear = totalExpensesForYear;
+
+                var totalExpensesByCategoryForYearDict = await _expenseCalculation.totalExpensesByCategoryByYear(targetYear.Value);
+                ViewBag.TotalExpenseByCategoryForYear = totalExpensesByCategoryForYearDict;
+            }
+            else
+            {
+                ViewBag.TotalExpenseByCategoryForYear = new Dictionary<string, decimal>();
             }
 
             if (targetNumOfMonths.HasValue)
             {
-                decimal totalExpensesForLastMonths = await _expenseCalculation.totalExpensesByLastMonths(targetNumOfMonths.Value);
+                ViewBag.NumOfLastMonths = targetNumOfMonths.Value;
+
+                var totalExpensesForLastMonths = await _expenseCalculation.totalExpensesByLastMonths(targetNumOfMonths.Value);
                 ViewBag.TotalExpensesForLastMonths = totalExpensesForLastMonths;
+
+                var totalExpensesByCategoryForLastMonthsDict = await _expenseCalculation.totalExpensesByCategoryByLastMonths(targetNumOfMonths.Value);
+                ViewBag.TotalExpensesByCategoryForLastMonths = totalExpensesByCategoryForLastMonthsDict;
+            }
+            else
+            {
+                ViewBag.TotalExpensesByCategoryForLastMonths = new Dictionary<string, decimal>();
             }
 
-            decimal totalExpensesForTerm = await _expenseCalculation.totalExpensesByTerm(startDate, endDate);
+            ViewBag.StartDate = startDate.ToShortDateString();
+            ViewBag.EndDate = endDate.ToShortDateString();
+
+            var totalExpensesForTerm = await _expenseCalculation.totalExpensesByTerm(startDate, endDate);
             ViewBag.TotalExpensesForTerm = totalExpensesForTerm;
+
+            var totalExpenseByCategoryInRangeDict = await _expenseCalculation.totalExpensesByCategoryByTerm(startDate, endDate);
+            ViewBag.TotalExpenseByCategoryInRange = totalExpenseByCategoryInRangeDict;
 
             return View(expenses);
         }
