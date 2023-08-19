@@ -10,6 +10,31 @@
     <a asp-action="Create" class="btn btn-outline-secondary">Add expense</a>
 </p>
 
+<div>
+    <form asp-controller="Expense" asp-action="Index" method="get">
+        <label for="targetYear">Enter Target Year:</label>
+        <input type="text" id="targetYear" name="targetYear" placeholder="YYYY" />
+        <button type="submit" class="btn btn-outline-primary">Calculate Total Expenses</button>
+    </form>
+    <p>Total expenses in specific year: @ViewBag.TotalExpensesForYear</p>
+
+    <form asp-controller="Expense" asp-action="Index" method="get">
+        <label for="targetNumOfMonths">Enter number of last months:</label>
+        <input type="text" id="targetNumOfMonths" name="targetNumOfMonths" placeholder="X" />
+        <button type="submit" class="btn btn-outline-primary">Calculate Total Expenses</button>
+    </form>
+    <p>Total expenses by specific last months: @ViewBag.TotalExpensesForLastMonths</p>
+
+    <form asp-controller="Expense" asp-action="Index" method="get">
+        <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate" name="startDate" />
+        <label for="endDate">End Date:</label>
+        <input type="date" id="endDate" name="endDate" />
+        <button type="submit" class="btn btn-outline-primary">Calculate Total Expenses</button>
+    </form>
+    <p>Total expenses for specific term: @ViewBag.TotalExpensesForTerm</p>
+</div>
+
 <div class="row">
     @foreach (var item in Model)
     {
@@ -25,48 +50,3 @@
         </div>
     }
 </div>
-
-
-@*<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Value)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Category)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CreatedAt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Value)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
-*@

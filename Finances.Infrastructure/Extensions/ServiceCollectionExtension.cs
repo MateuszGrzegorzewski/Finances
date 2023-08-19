@@ -1,4 +1,5 @@
-﻿using Finances.Domain.Interfaces;
+﻿using Finances.Application.Services;
+using Finances.Domain.Interfaces;
 using Finances.Infrastructure.Persistence;
 using Finances.Infrastructure.Repositories;
 using Finances.Infrastructure.Seeders;
@@ -25,6 +26,8 @@ namespace Finances.Infrastructure.Extensions
 
             services.AddScoped<IExpenseRepository, ExpenseRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
+
+            services.AddScoped<ExpenseCalculation>();
         }
     }
 }

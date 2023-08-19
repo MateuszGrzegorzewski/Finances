@@ -20,7 +20,5 @@ namespace Finances.Domain.Interfaces
         Task Delete(Entities.Expense expense);
 
         Task<IEnumerable<Entities.Expense>> GetAllByCategory(string category);
-
-        //Task<IEnumerable<Entities.Expense>> GetAllByCategory(Entities.Category category);
     }
 }
