@@ -1,10 +1,5 @@
 ﻿using Finances.Domain.Interfaces;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Finances.Application.Expense.Commands.EditExpenseAfterDeletingCategory
 {
@@ -24,7 +19,7 @@ namespace Finances.Application.Expense.Commands.EditExpenseAfterDeletingCategory
             foreach (var expenseDto in await expensesDto)
             {
                 var expense = await _repository.GetById(expenseDto.Id);
-                expense.Category = "undefined";
+                expense.Category = "Undefined";
             }
 
             await _repository.Commit();
