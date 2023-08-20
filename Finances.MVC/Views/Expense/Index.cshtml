@@ -2,8 +2,20 @@
 
 @{
     ViewData["Title"] = "Expenses";
+
+    var selectedYear = ViewBag.SelectedYear;
+    var selectedNumMonths = ViewBag.SelectedNumMonths;
 }
 
+<style>
+    .button-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        margin: 10px 0px 10px 0;
+    }
+</style>
+  
 <h1>Expenses</h1>
 
 <p>
@@ -12,49 +24,59 @@
 
 <div>
     <form asp-controller="Expense" asp-action="Index" method="get">
-        <label for="targetYear">Enter Target Year:</label>
-        <input type="text" id="targetYear" name="targetYear" placeholder="YYYY" />
-        <button type="submit" class="btn btn-outline-primary">Calculate</button>
+        <div >
+            <form asp-controller="Expense" asp-action="Index" method="get">
+                @for (int year = DateTime.Now.Year; year >= DateTime.Now.Year - 3; year--)
+                {
+                    <button type="submit" class="btn btn-outline-primary @((selectedYear == year) ? "active" : "")" name="targetYear" value="@year">@year</button>
+                }
+            </form>
+            <div class="button-container">
+                @foreach (var numMonths in new[] { 12, 6, 3, 1 })
+                {
+                    <form asp-controller="Expense" asp-action="Index" method="get">
+                        <button type="submit" class="btn btn-outline-primary @((selectedNumMonths == numMonths) ? "active" : "")" name="targetNumOfMonths" value="@numMonths">Last @numMonths months</button>
+                    </form>
+                }
+            </div>
+
+        </div>
     </form>
-    <p>Total expenses by category for @ViewBag.Year:</p>
+
+    <form asp-controller="Expense" asp-action="Index" method="get">
+        <label for="startDate">Start Date:</label>
+        <input type="date" id="startDate" name="startDate" value="@ViewBag.SelectedStartDate" />
+        <label for="endDate">End Date:</label>
+        <input type="date" id="endDate" name="endDate" value="@ViewBag.SelectedEndDate" />
+        <button type="submit" class="btn btn-outline-primary  @((ViewBag.IsCalculateClicked == true) ? "active" : "")">Calculate</button>
+    </form>
+
+    @if (ViewBag.IsCalculateClicked == true)
+    {
+        <p>Selected Start Date: @(ViewBag.SelectedStartDate.ToShortDateString())</p>
+        <p>Selected End Date: @(ViewBag.SelectedEndDate.ToShortDateString())</p>
+    }
+
+    <p>Categories:</p>
     <ul>
         @foreach (var kvp in ViewBag.TotalExpenseByCategoryForYear)
         {
             <li>@kvp.Key: @kvp.Value</li>
         }
     </ul>
-    <p>Total expenses in @ViewBag.Year: @ViewBag.TotalExpensesForYear</p>
-
-    <form asp-controller="Expense" asp-action="Index" method="get">
-        <label for="targetNumOfMonths">Enter number of last months:</label>
-        <input type="text" id="targetNumOfMonths" name="targetNumOfMonths" placeholder="X"/>
-        <button type="submit" class="btn btn-outline-primary">Calculate</button>
-    </form>
-    <p>Total expenses by category for @ViewBag.NumOfLastMonths last months:</p>
     <ul>
         @foreach (var kvp in ViewBag.TotalExpensesByCategoryForLastMonths)
         {
             <li>@kvp.Key: @kvp.Value</li>
         }
     </ul>
-    <p>Total expenses by  @ViewBag.NumOfLastMonths last months: @ViewBag.TotalExpensesForLastMonths</p>
-
-    <form asp-controller="Expense" asp-action="Index" method="get">
-        <label for="startDate">Start Date:</label>
-        <input type="date" id="startDate" name="startDate" />
-        <label for="endDate">End Date:</label>
-        <input type="date" id="endDate" name="endDate" />
-        <button type="submit" class="btn btn-outline-primary">Calculate</button>
-    </form>
-    <p>Total expenses by category for the term: @ViewBag.StartDate to @ViewBag.EndDate:</p>
     <ul>
         @foreach (var kvp in ViewBag.TotalExpenseByCategoryInRange)
         {
             <li>@kvp.Key: @kvp.Value</li>
         }
     </ul>
-    <p>Total expenses for the Term: @ViewBag.StartDate to @ViewBag.EndDate: @ViewBag.TotalExpensesForTerm</p>
-
+    <p>Total: @ViewBag.TotalExpensesForYear @ViewBag.TotalExpensesForLastMonths @ViewBag.TotalExpensesForTerm</p>
 </div>
 
 <div class="row">

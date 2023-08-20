@@ -1,14 +1,5 @@
-﻿using AutoMapper;
-using Finances.Application.Expense.Query.GetAllExpenses;
-using Finances.Application.Expense.Query.GetAllExpensesByCategory;
-using Finances.Domain.Entities;
+﻿using Finances.Application.Expense.Query.GetAllExpenses;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Finances.Application.Services
 {
@@ -28,13 +19,6 @@ namespace Finances.Application.Services
             var totalExpenseInRange = expenses
                 .Where(e => e.CreatedAt >= startDate && e.CreatedAt <= endDate)
                 .Sum(e => e.Value);
-
-            //var totalExpenseByCategoryInRangeDict = expenses
-            //    .Where(e => e.CreatedAt >= startDate && e.CreatedAt <= endDate)
-            //    .GroupBy(e => e.Category)
-            //    .ToDictionary(
-            //        group => group.Key,
-            //        group => group.Sum(e => e.Value));
 
             return totalExpenseInRange;
         }

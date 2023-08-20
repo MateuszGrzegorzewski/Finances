@@ -1,14 +1,11 @@
 ﻿using AutoMapper;
-using Finances.Application.Expense;
 using Finances.Application.Expense.Commands.CreateExpense;
 using Finances.Application.Expense.Commands.DeleteExpense;
 using Finances.Application.Expense.Commands.EditExpense;
 using Finances.Application.Expense.Query.GetAllCategories;
 using Finances.Application.Expense.Query.GetAllExpenses;
-using Finances.Application.Expense.Query.GetAllExpensesByCategory;
 using Finances.Application.Expense.Query.GetByIdExpense;
 using Finances.Application.Services;
-using Humanizer;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,7 +30,7 @@ namespace Finances.MVC.Controllers
 
             if (targetYear.HasValue)
             {
-                ViewBag.Year = targetYear.Value;
+                ViewBag.SelectedYear = targetYear;
 
                 var totalExpensesForYear = await _expenseCalculation.totalExpensesByYear(targetYear.Value);
                 ViewBag.TotalExpensesForYear = totalExpensesForYear;
@@ -48,7 +45,7 @@ namespace Finances.MVC.Controllers
 
             if (targetNumOfMonths.HasValue)
             {
-                ViewBag.NumOfLastMonths = targetNumOfMonths.Value;
+                ViewBag.SelectedNumMonths = targetNumOfMonths;
 
                 var totalExpensesForLastMonths = await _expenseCalculation.totalExpensesByLastMonths(targetNumOfMonths.Value);
                 ViewBag.TotalExpensesForLastMonths = totalExpensesForLastMonths;
@@ -61,14 +58,23 @@ namespace Finances.MVC.Controllers
                 ViewBag.TotalExpensesByCategoryForLastMonths = new Dictionary<string, decimal>();
             }
 
-            ViewBag.StartDate = startDate.ToShortDateString();
-            ViewBag.EndDate = endDate.ToShortDateString();
+            if (startDate > new DateTime(1, 1, 1) && endDate > new DateTime(1, 1, 1))
+            {
+                ViewBag.SelectedStartDate = startDate;
+                ViewBag.SelectedEndDate = endDate;
+                ViewBag.IsCalculateClicked = true;
 
-            var totalExpensesForTerm = await _expenseCalculation.totalExpensesByTerm(startDate, endDate);
-            ViewBag.TotalExpensesForTerm = totalExpensesForTerm;
+                var totalExpensesForTerm = await _expenseCalculation.totalExpensesByTerm(startDate, endDate);
+                ViewBag.TotalExpensesForTerm = totalExpensesForTerm;
 
-            var totalExpenseByCategoryInRangeDict = await _expenseCalculation.totalExpensesByCategoryByTerm(startDate, endDate);
-            ViewBag.TotalExpenseByCategoryInRange = totalExpenseByCategoryInRangeDict;
+                var totalExpenseByCategoryInRangeDict = await _expenseCalculation.totalExpensesByCategoryByTerm(startDate, endDate);
+                ViewBag.TotalExpenseByCategoryInRange = totalExpenseByCategoryInRangeDict;
+            }
+            else
+            {
+                ViewBag.TotalExpenseByCategoryInRange = new Dictionary<string, decimal>();
+                ViewBag.IsCalculateClicked = false;
+            }
 
             return View(expenses);
         }
