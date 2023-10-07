@@ -23,7 +23,6 @@ namespace Finances.Application.Expense.Commands.EditExpense
 
             expense.Value = request.Value;
             expense.Category = request.Category;
-            expense.CreatedAt = request.CreatedAt;
             expense.Description = request.Description;
 
             await _repository.Commit();

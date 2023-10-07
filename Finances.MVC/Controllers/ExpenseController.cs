@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Finances.Application.ApplicationUser;
 using Finances.Application.Expense.Commands.CreateExpense;
 using Finances.Application.Expense.Commands.DeleteExpense;
 using Finances.Application.Expense.Commands.EditExpense;
