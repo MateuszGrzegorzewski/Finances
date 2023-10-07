@@ -1,4 +1,5 @@
-﻿using Finances.Application.Expense.Commands.CreateCategory;
+﻿using Finances.Application.ApplicationUser;
+using Finances.Application.Expense.Commands.CreateCategory;
 using Finances.Application.Expense.Commands.CreateExpense;
 using Finances.Application.Mappings;
 using FluentValidation;
@@ -16,6 +17,8 @@ namespace Finances.Application.Extensions
     {
         public static void AddApplication(this IServiceCollection services)
         {
+            services.AddScoped<IUserContext, UserContext>();
+
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining(typeof(CreateExpenseCommand)));
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining(typeof(CreateCategoryCommand)));
 

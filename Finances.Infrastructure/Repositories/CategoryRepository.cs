@@ -31,8 +31,8 @@ namespace Finances.Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Category>> GetAll()
-            => await _dbContext.Categories.ToListAsync();
+        public async Task<IEnumerable<Category>> GetAll(string currentUserId)
+            => await _dbContext.Categories.Where(c => c.CreatedById == null || c.CreatedById == currentUserId).ToListAsync();
 
         public async Task<Category> GetByEncodedName(string encodedName)
             => await _dbContext.Categories.FirstAsync(x => x.EncodedName == encodedName);

@@ -6,6 +6,7 @@ using Finances.Application.Expense.Query.GetAllCategories;
 using Finances.Application.Expense.Query.GetAllExpensesByCategory;
 using Finances.Application.Expense.Query.GetByEncodedName;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Finances.MVC.Controllers
@@ -27,12 +28,14 @@ namespace Finances.MVC.Controllers
             return View(categories);
         }
 
+        [Authorize]
         public IActionResult Create()
         {
             return View();
         }
 
         [Route("Category/Delete/{encodedName}")]
+        [Authorize]
         public async Task<IActionResult> Delete(string encodedName)
         {
             var dto = await _mediator.Send(new GetCategoryByEncodedNameQuery(encodedName));
@@ -41,6 +44,7 @@ namespace Finances.MVC.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Create(CreateCategoryCommand command)
         {
             if (!ModelState.IsValid)
@@ -53,6 +57,7 @@ namespace Finances.MVC.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [Route("Category/Delete/{encodedName}")]
         public async Task<IActionResult> Delete(string encodedName, DeleteCategoryCommand command)
         {

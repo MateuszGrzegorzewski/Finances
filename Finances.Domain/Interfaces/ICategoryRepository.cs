@@ -13,7 +13,7 @@ namespace Finances.Domain.Interfaces
 
         Task<Category?> GetByName(string name);
 
-        Task<IEnumerable<Category>> GetAll();
+        Task<IEnumerable<Category>> GetAll(string currentUserId);
 
         Task<Category> GetByEncodedName(string encodedName);
 

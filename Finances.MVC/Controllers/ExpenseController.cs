@@ -7,6 +7,7 @@ using Finances.Application.Expense.Query.GetAllExpenses;
 using Finances.Application.Expense.Query.GetByIdExpense;
 using Finances.Application.Services;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Finances.MVC.Controllers
@@ -79,7 +80,8 @@ namespace Finances.MVC.Controllers
             return View(expenses);
         }
 
-        public async Task<IActionResult> CreateAsync()
+        [Authorize]
+        public async Task<IActionResult> Create()
         {
             var categories = await _mediator.Send(new GetAllCategoriesQuery());
             ViewBag.Categories = categories;
@@ -93,6 +95,7 @@ namespace Finances.MVC.Controllers
             return View(dto);
         }
 
+        [Authorize]
         public async Task<IActionResult> Edit(int id)
         {
             var categories = await _mediator.Send(new GetAllCategoriesQuery());
@@ -105,6 +108,7 @@ namespace Finances.MVC.Controllers
             return View(model);
         }
 
+        [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
             var dto = await _mediator.Send(new GetByIdExpenseQuery(id));
@@ -113,6 +117,7 @@ namespace Finances.MVC.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Create(CreateExpenseCommand command)
         {
             if (!ModelState.IsValid)
@@ -128,6 +133,7 @@ namespace Finances.MVC.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Edit(int id, EditExpenseCommand command)
         {
             if (!ModelState.IsValid)
@@ -143,6 +149,7 @@ namespace Finances.MVC.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Delete(int id, DeleteExpenseCommand command)
         {
             await _mediator.Send(command);
