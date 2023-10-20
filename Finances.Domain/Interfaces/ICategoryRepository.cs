@@ -15,7 +15,7 @@ namespace Finances.Domain.Interfaces
 
         Task<IEnumerable<Category>> GetAll(string currentUserId);
 
-        Task<Category> GetByEncodedName(string encodedName);
+        Task<Category> GetByEncodedName(string encodedName, string currentUserId);
 
         Task Delete(Category category);
     }

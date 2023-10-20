@@ -22,6 +22,7 @@ namespace Finances.MVC.Controllers
             _mapper = mapper;
         }
 
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             var categories = await _mediator.Send(new GetAllCategoriesQuery());
@@ -38,9 +39,15 @@ namespace Finances.MVC.Controllers
         [Authorize]
         public async Task<IActionResult> Delete(string encodedName)
         {
-            var dto = await _mediator.Send(new GetCategoryByEncodedNameQuery(encodedName));
-
-            return View(dto);
+            try
+            {
+                var dto = await _mediator.Send(new GetCategoryByEncodedNameQuery(encodedName));
+                return View(dto);
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("NoAccess", "Home");
+            }
         }
 
         [HttpPost]

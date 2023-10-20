@@ -26,6 +26,7 @@ namespace Finances.Application.Expense.Query.GetAllCategories
         public async Task<IEnumerable<CategoryDto>> Handle(GetAllCategoriesQuery request, CancellationToken cancellationToken)
         {
             var currentUserId = _userContext.GetCurrentUser().Id;
+
             var categories = await _repository.GetAll(currentUserId);
             var dtos = _mapper.Map<IEnumerable<CategoryDto>>(categories);
 
