@@ -1,16 +1,12 @@
-﻿using Finances.Domain.Interfaces;
+﻿using Finances.Application.ApplicationUser;
+using Finances.Domain.Interfaces;
 using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Finances.Application.Expense.Commands.CreateCategory
 {
     public class CreateCategoryCommandValidator : AbstractValidator<CreateCategoryCommand>
     {
-        public CreateCategoryCommandValidator(ICategoryRepository repository)
+        public CreateCategoryCommandValidator(ICategoryRepository repository, IUserContext userContext)
         {
             RuleFor(c => c.Name)
                 .NotEmpty()
@@ -18,7 +14,8 @@ namespace Finances.Application.Expense.Commands.CreateCategory
                 .MaximumLength(20).WithMessage("Name should have maximum 20 characters")
                 .Custom((value, context) =>
                 {
-                    var existingCategory = repository.GetByName(value).Result;
+                    var currentUserId = userContext.GetCurrentUser().Id;
+                    var existingCategory = repository.GetByName(value, currentUserId).Result;
                     if (existingCategory != null)
                     {
                         context.AddFailure($"{value} is not unique name for category");

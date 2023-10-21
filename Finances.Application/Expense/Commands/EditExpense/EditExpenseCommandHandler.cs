@@ -1,25 +1,25 @@
-﻿using Finances.Domain.Interfaces;
+﻿using Finances.Application.ApplicationUser;
+using Finances.Domain.Interfaces;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Finances.Application.Expense.Commands.EditExpense
 {
     public class EditExpenseCommandHandler : IRequestHandler<EditExpenseCommand>
     {
         private readonly IExpenseRepository _repository;
+        private readonly IUserContext _userContext;
 
-        public EditExpenseCommandHandler(IExpenseRepository repository)
+        public EditExpenseCommandHandler(IExpenseRepository repository, IUserContext userContext)
         {
             _repository = repository;
+            _userContext = userContext;
         }
 
         public async Task Handle(EditExpenseCommand request, CancellationToken cancellationToken)
         {
-            var expense = await _repository.GetById(request.Id);
+            var currentUserId = _userContext.GetCurrentUser().Id;
+
+            var expense = await _repository.GetById(request.Id, currentUserId);
 
             expense.Value = request.Value;
             expense.Category = request.Category;

@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Finances.Application.ApplicationUser;
 using Finances.Application.Expense.Commands.CreateExpense;
 using Finances.Application.Expense.Commands.DeleteExpense;
 using Finances.Application.Expense.Commands.EditExpense;
@@ -92,8 +91,15 @@ namespace Finances.MVC.Controllers
 
         public async Task<IActionResult> Details(int id)
         {
-            var dto = await _mediator.Send(new GetByIdExpenseQuery(id));
-            return View(dto);
+            try
+            {
+                var dto = await _mediator.Send(new GetByIdExpenseQuery(id));
+                return View(dto);
+            }
+            catch (InvalidOperationException)
+            {
+                return RedirectToAction("NoAccess", "Home");
+            }
         }
 
         [Authorize]
@@ -102,19 +108,32 @@ namespace Finances.MVC.Controllers
             var categories = await _mediator.Send(new GetAllCategoriesQuery());
             ViewBag.Categories = categories;
 
-            var dto = await _mediator.Send(new GetByIdExpenseQuery(id));
+            try
+            {
+                var dto = await _mediator.Send(new GetByIdExpenseQuery(id));
 
-            EditExpenseCommand model = _mapper.Map<EditExpenseCommand>(dto);
+                EditExpenseCommand model = _mapper.Map<EditExpenseCommand>(dto);
 
-            return View(model);
+                return View(model);
+            }
+            catch (InvalidOperationException)
+            {
+                return RedirectToAction("NoAccess", "Home");
+            }
         }
 
         [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
-            var dto = await _mediator.Send(new GetByIdExpenseQuery(id));
-
-            return View(dto);
+            try
+            {
+                var dto = await _mediator.Send(new GetByIdExpenseQuery(id));
+                return View(dto);
+            }
+            catch (InvalidOperationException)
+            {
+                return RedirectToAction("NoAccess", "Home");
+            }
         }
 
         [HttpPost]

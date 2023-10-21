@@ -1,9 +1,4 @@
 ﻿using Finances.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Finances.Domain.Interfaces
 {
@@ -11,7 +6,7 @@ namespace Finances.Domain.Interfaces
     {
         Task Create(Category category);
 
-        Task<Category?> GetByName(string name);
+        Task<Category?> GetByName(string name, string currentUserId);
 
         Task<IEnumerable<Category>> GetAll(string currentUserId);
 

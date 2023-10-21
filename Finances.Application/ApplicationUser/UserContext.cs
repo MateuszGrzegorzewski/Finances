@@ -1,10 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Finances.Application.ApplicationUser
 {
@@ -29,11 +24,6 @@ namespace Finances.Application.ApplicationUser
             {
                 throw new InvalidOperationException("Context user is not present");
             }
-
-            //if (user.Identity == null || !user.Identity.IsAuthenticated)
-            //{
-            //    return null;
-            //}
 
             var id = user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)!.Value;
             var email = user.FindFirst(c => c.Type == ClaimTypes.Email)!.Value;

@@ -44,7 +44,7 @@ namespace Finances.MVC.Controllers
                 var dto = await _mediator.Send(new GetCategoryByEncodedNameQuery(encodedName));
                 return View(dto);
             }
-            catch (Exception e)
+            catch (InvalidOperationException)
             {
                 return RedirectToAction("NoAccess", "Home");
             }

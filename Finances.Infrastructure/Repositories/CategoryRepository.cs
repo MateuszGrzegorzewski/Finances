@@ -1,13 +1,7 @@
-﻿using Finances.Application.ApplicationUser;
-using Finances.Domain.Entities;
+﻿using Finances.Domain.Entities;
 using Finances.Domain.Interfaces;
 using Finances.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Finances.Infrastructure.Repositories
 {
@@ -38,7 +32,7 @@ namespace Finances.Infrastructure.Repositories
         public async Task<Category> GetByEncodedName(string encodedName, string currentUserId)
             => await _dbContext.Categories.Where(c => c.CreatedById == null || c.CreatedById == currentUserId).FirstAsync(x => x.EncodedName == encodedName);
 
-        public Task<Category?> GetByName(string name)
-            => _dbContext.Categories.FirstOrDefaultAsync(x => x.Name.ToLower() == name.ToLower());
+        public Task<Category?> GetByName(string name, string currentUserId)
+            => _dbContext.Categories.Where(c => c.CreatedById == null || c.CreatedById == currentUserId).FirstOrDefaultAsync(x => x.Name.ToLower() == name.ToLower());
     }
 }

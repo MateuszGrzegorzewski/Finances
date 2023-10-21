@@ -2,11 +2,6 @@
 using Finances.Domain.Interfaces;
 using Finances.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Finances.Infrastructure.Repositories
 {
@@ -34,13 +29,13 @@ namespace Finances.Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Expense>> GetAll()
-        => await _dbContext.Expenses.ToListAsync();
+        public async Task<IEnumerable<Expense>> GetAll(string currentUserId)
+        => await _dbContext.Expenses.Where(c => c.CreatedById == currentUserId).ToListAsync();
 
-        public async Task<IEnumerable<Expense>> GetAllByCategory(string category)
-        => await _dbContext.Expenses.Where(x => x.Category == category).ToListAsync();
+        public async Task<IEnumerable<Expense>> GetAllByCategory(string category, string currentUserId)
+        => await _dbContext.Expenses.Where(c => c.CreatedById == currentUserId).Where(x => x.Category == category).ToListAsync();
 
-        public async Task<Expense> GetById(int id)
-        => await _dbContext.Expenses.FirstAsync(x => x.Id == id);
+        public async Task<Expense> GetById(int id, string currentUserId)
+        => await _dbContext.Expenses.Where(c => c.CreatedById == currentUserId).FirstAsync(x => x.Id == id);
     }
 }

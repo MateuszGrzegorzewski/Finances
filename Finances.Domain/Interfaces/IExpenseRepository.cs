@@ -1,9 +1,4 @@
 ﻿//using Finances.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Finances.Domain.Interfaces
 {
@@ -11,14 +6,14 @@ namespace Finances.Domain.Interfaces
     {
         Task Create(Entities.Expense expense);
 
-        Task<IEnumerable<Entities.Expense>> GetAll();
+        Task<IEnumerable<Entities.Expense>> GetAll(string currentUserId);
 
-        Task<Entities.Expense> GetById(int id);
+        Task<Entities.Expense> GetById(int id, string currentUserId);
 
         Task Commit();
 
         Task Delete(Entities.Expense expense);
 
-        Task<IEnumerable<Entities.Expense>> GetAllByCategory(string category);
+        Task<IEnumerable<Entities.Expense>> GetAllByCategory(string category, string currentUserId);
     }
 }

@@ -1,11 +1,7 @@
 ﻿using AutoMapper;
+using Finances.Application.ApplicationUser;
 using Finances.Domain.Interfaces;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Finances.Application.Expense.Query.GetAllExpenses
 {
@@ -13,16 +9,20 @@ namespace Finances.Application.Expense.Query.GetAllExpenses
     {
         private readonly IExpenseRepository _repository;
         private readonly IMapper _mapper;
+        private readonly IUserContext _userContext;
 
-        public GetAllExpensesQueryHandler(IExpenseRepository repository, IMapper mapper)
+        public GetAllExpensesQueryHandler(IExpenseRepository repository, IMapper mapper, IUserContext userContext)
         {
             _repository = repository;
             _mapper = mapper;
+            _userContext = userContext;
         }
 
         public async Task<IEnumerable<ExpenseDto>> Handle(GetAllExpensesQuery request, CancellationToken cancellationToken)
         {
-            var expenses = await _repository.GetAll();
+            var currentUserId = _userContext.GetCurrentUser().Id;
+
+            var expenses = await _repository.GetAll(currentUserId);
             var dtos = _mapper.Map<IEnumerable<ExpenseDto>>(expenses);
 
             return dtos;
