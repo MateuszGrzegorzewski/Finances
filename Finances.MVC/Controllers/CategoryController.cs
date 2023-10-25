@@ -5,6 +5,7 @@ using Finances.Application.Expense.Commands.EditExpenseAfterDeletingCategory;
 using Finances.Application.Expense.Query.GetAllCategories;
 using Finances.Application.Expense.Query.GetAllExpensesByCategory;
 using Finances.Application.Expense.Query.GetByEncodedName;
+using Finances.MVC.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -60,6 +61,9 @@ namespace Finances.MVC.Controllers
             }
 
             await _mediator.Send(command);
+
+            this.SetNotification("success", $"Created category: {command.Name}");
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -75,6 +79,8 @@ namespace Finances.MVC.Controllers
             var expenses = _mediator.Send(new GetAllExpensesByCategoryQuery(dto.Name));
 
             await _mediator.Send(new EditExpenseAfterDeletingCategoryCommand(expenses));
+
+            this.SetNotification("info", $"Deleted category: {encodedName}");
 
             return RedirectToAction(nameof(Index));
         }

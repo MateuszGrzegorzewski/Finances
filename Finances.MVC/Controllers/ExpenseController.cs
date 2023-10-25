@@ -6,6 +6,7 @@ using Finances.Application.Expense.Query.GetAllCategories;
 using Finances.Application.Expense.Query.GetAllExpenses;
 using Finances.Application.Expense.Query.GetByIdExpense;
 using Finances.Application.Services;
+using Finances.MVC.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -25,6 +26,7 @@ namespace Finances.MVC.Controllers
             _expenseCalculation = expenseCalculation;
         }
 
+        [Authorize]
         public async Task<IActionResult> Index(int? targetYear, int? targetNumOfMonths, DateTime startDate, DateTime endDate)
         {
             var expenses = await _mediator.Send(new GetAllExpensesQuery());
@@ -89,6 +91,7 @@ namespace Finances.MVC.Controllers
             return View();
         }
 
+        [Authorize]
         public async Task<IActionResult> Details(int id)
         {
             try
@@ -149,6 +152,9 @@ namespace Finances.MVC.Controllers
             }
 
             await _mediator.Send(command);
+
+            this.SetNotification("success", $"Created expense: {command.Category} - {command.Value}");
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -165,6 +171,9 @@ namespace Finances.MVC.Controllers
             }
 
             await _mediator.Send(command);
+
+            this.SetNotification("success", $"Edited expense: {command.Category} - {command.Value}");
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -173,6 +182,9 @@ namespace Finances.MVC.Controllers
         public async Task<IActionResult> Delete(int id, DeleteExpenseCommand command)
         {
             await _mediator.Send(command);
+
+            this.SetNotification("info", $"Deleted expense: {command.Category} - {command.Value}");
+
             return RedirectToAction(nameof(Index));
         }
     }
