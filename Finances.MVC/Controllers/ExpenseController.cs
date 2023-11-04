@@ -10,6 +10,7 @@ using Finances.MVC.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using X.PagedList;
 
 namespace Finances.MVC.Controllers
 {
@@ -27,7 +28,7 @@ namespace Finances.MVC.Controllers
         }
 
         [Authorize]
-        public async Task<IActionResult> Index(int? targetYear, int? targetNumOfMonths, DateTime startDate, DateTime endDate)
+        public async Task<IActionResult> Index(int? page, int? targetYear, int? targetNumOfMonths, DateTime startDate, DateTime endDate)
         {
             var expenses = await _mediator.Send(new GetAllExpensesQuery());
 
@@ -79,7 +80,10 @@ namespace Finances.MVC.Controllers
                 ViewBag.IsCalculateClicked = false;
             }
 
-            return View(expenses);
+            int pageSize = 30;
+            var pagedExpenses = expenses.ToPagedList(page ?? 1, pageSize);
+
+            return View(pagedExpenses);
         }
 
         [Authorize]

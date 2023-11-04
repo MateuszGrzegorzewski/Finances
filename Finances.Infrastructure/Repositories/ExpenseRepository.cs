@@ -30,7 +30,7 @@ namespace Finances.Infrastructure.Repositories
         }
 
         public async Task<IEnumerable<Expense>> GetAll(string currentUserId)
-        => await _dbContext.Expenses.Where(c => c.CreatedById == currentUserId).ToListAsync();
+        => await _dbContext.Expenses.Where(c => c.CreatedById == currentUserId).OrderByDescending(e => e.CreatedAt).ThenBy(e => e.Category).ToListAsync();
 
         public async Task<IEnumerable<Expense>> GetAllByCategory(string category, string currentUserId)
         => await _dbContext.Expenses.Where(c => c.CreatedById == currentUserId).Where(x => x.Category == category).ToListAsync();
