@@ -27,6 +27,8 @@
     <a asp-action="Create" class="btn btn-outline-secondary">Add expense</a>
 </p>
 
+<hr class="col-xl-5" />
+
 <div>
     <form asp-controller="Expense" asp-action="Index" method="get">
         <div >
@@ -48,40 +50,66 @@
         </div>
     </form>
 
+    <hr class="col-xl-5"/>
+
     <form asp-controller="Expense" asp-action="Index" method="get">
-        <label for="startDate">Start Date:</label>
-        <input type="date" id="startDate" name="startDate" value="@ViewBag.SelectedStartDate" />
-        <label for="endDate">End Date:</label>
-        <input type="date" id="endDate" name="endDate" value="@ViewBag.SelectedEndDate" />
-        <button type="submit" class="btn btn-outline-primary  @((ViewBag.IsCalculateClicked == true) ? "active" : "")">Calculate</button>
+        <div class="form-group col-xl-2">
+            <label for="startDate">Start Date:</label>
+            <input type="date" class="form-control" id="startDate" name="startDate" value="@ViewBag.SelectedStartDate" />
+            <label for="endDate">End Date:</label>
+            <input type="date" class="form-control" id="endDate" name="endDate" value="@ViewBag.SelectedEndDate" />
+        </div>
+        <button type="submit" class="btn btn-outline-primary @((ViewBag.IsCalculateClicked == true) ? "active" : "") mt-2">Calculate</button>
     </form>
+
+    <hr class="col-xl-5" />
 
     @if (ViewBag.IsCalculateClicked == true)
     {
-        <p>Selected Start Date: @(ViewBag.SelectedStartDate.ToShortDateString())</p>
-        <p>Selected End Date: @(ViewBag.SelectedEndDate.ToShortDateString())</p>
+        <ul class="list-group col-xl-3">
+            <li class="list-group-item ps-2"> Selected Start Date: @(ViewBag.SelectedStartDate.ToShortDateString())</li>
+            <li class="list-group-item ps-2">Selected End Date: @(ViewBag.SelectedEndDate.ToShortDateString())</li>
+
+        </ul>
     }
 
-    <p>Categories:</p>
-    <ul>
+    <ul class="list-group col-xl-3">
         @foreach (var kvp in ViewBag.TotalExpenseByCategoryForYear)
         {
-            <li>@kvp.Key: @kvp.Value</li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                @kvp.Key:
+                 <div class="text-end">@kvp.Value</div>
+            </li>
         }
     </ul>
-    <ul>
+    <ul class="list-group col-xl-3">
         @foreach (var kvp in ViewBag.TotalExpensesByCategoryForLastMonths)
         {
-            <li>@kvp.Key: @kvp.Value</li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                @kvp.Key: 
+                <div class="text-end">@kvp.Value</div>
+            </li>
         }
     </ul>
-    <ul>
+    <ul class="list-group col-xl-3">
         @foreach (var kvp in ViewBag.TotalExpenseByCategoryInRange)
         {
-            <li>@kvp.Key: @kvp.Value</li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                @kvp.Key: 
+                <div class="text-end">@kvp.Value</div>
+             </li>
         }
     </ul>
-    <p>Total: @ViewBag.TotalExpensesForYear @ViewBag.TotalExpensesForLastMonths @ViewBag.TotalExpensesForTerm</p>
+    @if (ViewBag.TotalExpensesForYear > 0 || ViewBag.TotalExpensesForLastMonths > 0 || ViewBag.TotalExpensesForTerm > 0)
+    {
+        <ul class="list-group col-xl-3 mb-4">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>Total: </div>
+                <div class="text-end">@ViewBag.TotalExpensesForYear @ViewBag.TotalExpensesForLastMonths @ViewBag.TotalExpensesForTerm</div>
+            </li>
+        </ul>
+    }
+
 </div>
 
 <div class="row">
