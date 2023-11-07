@@ -1,12 +1,6 @@
 ﻿using AutoMapper;
 using Finances.Application.Expense;
 using Finances.Application.Expense.Commands.EditExpense;
-using Finances.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Finances.Application.Mappings
 {

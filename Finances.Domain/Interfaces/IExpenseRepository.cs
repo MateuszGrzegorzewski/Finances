@@ -1,6 +1,4 @@
-﻿//using Finances.Domain.Entities;
-
-namespace Finances.Domain.Interfaces
+﻿namespace Finances.Domain.Interfaces
 {
     public interface IExpenseRepository
     {

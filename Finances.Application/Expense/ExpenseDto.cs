@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.ComponentModel.DataAnnotations;
-using Finances.Domain.Entities;
-
-namespace Finances.Application.Expense
+﻿namespace Finances.Application.Expense
 {
     public class ExpenseDto
     {
