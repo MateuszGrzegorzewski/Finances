@@ -2,7 +2,7 @@
 using Finances.Domain.Interfaces;
 using FluentValidation;
 
-namespace Finances.Application.Expense.Commands.CreateCategory
+namespace Finances.Application.Category.Commands.CreateCategory
 {
     public class CreateCategoryCommandValidator : AbstractValidator<CreateCategoryCommand>
     {

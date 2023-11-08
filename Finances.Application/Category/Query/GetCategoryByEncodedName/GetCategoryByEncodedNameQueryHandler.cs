@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using Finances.Application.ApplicationUser;
-using Finances.Application.Expense.Query.GetByEncodedName;
+using Finances.Application.Category;
 using Finances.Domain.Interfaces;
 using MediatR;
 
-namespace Finances.Application.Expense.Query.GetCategoryByEncodedName
+namespace Finances.Application.Category.Query.GetCategoryByEncodedName
 {
     public class GetCategoryByEncodedNameQueryHandler : IRequestHandler<GetCategoryByEncodedNameQuery, CategoryDto>
     {

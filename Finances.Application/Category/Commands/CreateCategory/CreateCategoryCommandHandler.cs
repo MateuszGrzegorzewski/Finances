@@ -3,7 +3,7 @@ using Finances.Application.ApplicationUser;
 using Finances.Domain.Interfaces;
 using MediatR;
 
-namespace Finances.Application.Expense.Commands.CreateCategory
+namespace Finances.Application.Category.Commands.CreateCategory
 {
     public class CreateCategoryCommandHandler : IRequestHandler<CreateCategoryCommand>
     {

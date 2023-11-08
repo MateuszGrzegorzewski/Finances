@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Finances.Application.Expense;
+using Finances.Application.Category;
 
 namespace Finances.Application.Mappings
 {

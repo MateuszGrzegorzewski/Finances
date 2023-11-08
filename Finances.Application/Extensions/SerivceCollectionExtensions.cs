@@ -1,5 +1,5 @@
 ﻿using Finances.Application.ApplicationUser;
-using Finances.Application.Expense.Commands.CreateCategory;
+using Finances.Application.Category.Commands.CreateCategory;
 using Finances.Application.Expense.Commands.CreateExpense;
 using Finances.Application.Mappings;
 using FluentValidation;

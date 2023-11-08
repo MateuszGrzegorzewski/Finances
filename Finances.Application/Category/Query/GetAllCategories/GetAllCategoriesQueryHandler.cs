@@ -1,9 +1,10 @@
 ﻿using AutoMapper;
 using Finances.Application.ApplicationUser;
+using Finances.Application.Category;
 using Finances.Domain.Interfaces;
 using MediatR;
 
-namespace Finances.Application.Expense.Query.GetAllCategories
+namespace Finances.Application.Category.Query.GetAllCategories
 {
     public class GetAllCategoriesQueryHandler : IRequestHandler<GetAllCategoriesQuery, IEnumerable<CategoryDto>>
     {

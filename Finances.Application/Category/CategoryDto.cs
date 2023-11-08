@@ -1,4 +1,4 @@
-﻿namespace Finances.Application.Expense
+﻿namespace Finances.Application.Category
 {
     public class CategoryDto
     {

@@ -1,6 +1,7 @@
-﻿using MediatR;
+﻿using Finances.Application.Category;
+using MediatR;
 
-namespace Finances.Application.Expense.Query.GetByEncodedName
+namespace Finances.Application.Category.Query.GetCategoryByEncodedName
 {
     public class GetCategoryByEncodedNameQuery : IRequest<CategoryDto>
     {

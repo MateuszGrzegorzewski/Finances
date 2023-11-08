@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using Finances.Application.Expense.Commands.CreateCategory;
-using Finances.Application.Expense.Commands.DeleteCategory;
+using Finances.Application.Category.Commands.CreateCategory;
+using Finances.Application.Category.Commands.DeleteCategory;
 using Finances.Application.Expense.Commands.EditExpenseAfterDeletingCategory;
-using Finances.Application.Expense.Query.GetAllCategories;
+using Finances.Application.Category.Query.GetAllCategories;
 using Finances.Application.Expense.Query.GetAllExpensesByCategory;
-using Finances.Application.Expense.Query.GetByEncodedName;
+using Finances.Application.Category.Query.GetCategoryByEncodedName;
 using Finances.MVC.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;

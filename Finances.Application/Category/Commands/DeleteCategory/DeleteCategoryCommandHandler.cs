@@ -2,7 +2,7 @@
 using Finances.Domain.Interfaces;
 using MediatR;
 
-namespace Finances.Application.Expense.Commands.DeleteCategory
+namespace Finances.Application.Category.Commands.DeleteCategory
 {
     public class DeleteCategoryCommandHandler : IRequestHandler<DeleteCategoryCommand>
     {
