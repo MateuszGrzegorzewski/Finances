@@ -10,7 +10,7 @@ namespace Finances.Application.Category.Commands.CreateCategory.Tests
     public class CreateCategoryCommandHandlerTests
     {
         [Fact()]
-        public async void Handle_CreateExpense_WithAuthorizedUser()
+        public async void Handle_CreateCategory_WithAuthorizedUser()
         {
             var command = new CreateCategoryCommand()
             {
