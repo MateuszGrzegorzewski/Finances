@@ -2,7 +2,6 @@
 using Finances.Application.Category;
 using Finances.Application.Category.Commands.CreateCategory;
 using Finances.Application.Category.Query.GetAllCategories;
-using Finances.Domain.Entities;
 using Finances.Domain.Interfaces;
 using FluentAssertions;
 using MediatR;
@@ -40,7 +39,11 @@ namespace Finances.MVC.Controllers.Tests
 
             protected override Task<AuthenticateResult> HandleAuthenticateAsync()
             {
-                var claims = new[] { new Claim(ClaimTypes.Name, "Test user") };
+                var claims = new[] {
+                    new Claim(ClaimTypes.Name, "Test user"),
+                    new Claim(ClaimTypes.NameIdentifier, "1"),
+                    new Claim(ClaimTypes.Email, "test@example.com"),
+                };
                 var identity = new ClaimsIdentity(claims, "Test");
                 var principal = new ClaimsPrincipal(identity);
                 var ticket = new AuthenticationTicket(principal, "TestScheme");
@@ -172,63 +175,179 @@ namespace Finances.MVC.Controllers.Tests
             content.Should().Contain("<h1>Create Category</h1>");
         }
 
-        //[Fact()]
-        //public async Task Create_CreatingCategory()
-        //{
-        //    // arrange
-        //    var mediatorMock = new Mock<IMediator>();
+        [Fact()]
+        public async Task Create_CreatingCategory()
+        {
+            // arrange
+            var mediatorMock = new Mock<IMediator>();
 
-        //    mediatorMock.Setup(m => m.Send(It.IsAny<CreateCategoryCommand>(), default))
-        //        .Returns(Task.CompletedTask);
+            mediatorMock.Setup(m => m.Send(It.IsAny<CreateCategoryCommand>(), default))
+                .Returns(Task.CompletedTask);
 
-        //    var userContextMock = new Mock<IUserContext>();
+            var categoryRepositoryMock = new Mock<ICategoryRepository>();
 
-        //    userContextMock.Setup(e => e.GetCurrentUser())
-        //        .Returns(new CurrentUser("1", "test@example.com"));
+            var client = _factory
+                .WithWebHostBuilder(builder =>
+                    builder.ConfigureTestServices(services =>
+                    {
+                        services.AddScoped(_ => mediatorMock.Object);
+                        services.AddScoped(_ => categoryRepositoryMock.Object);
+                        services.AddAuthentication(defaultScheme: "TestScheme")
+                            .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(
+                                "TestScheme", options => { });
+                    }))
+                .CreateClient();
 
-        //    var categoryRepositoryMock = new Mock<ICategoryRepository>();
-        //    categoryRepositoryMock.Setup(r => r.GetByName(It.IsAny<string>(), It.IsAny<string>()))
-        //                          .Returns(Task.FromResult<Domain.Entities.Category?>(null)); // Simulate no existing category
+            client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue(scheme: "TestScheme");
 
-        //    var client = _factory
-        //        .WithWebHostBuilder(builder =>
-        //            builder.ConfigureTestServices(services =>
-        //            {
-        //                services.AddScoped(_ => mediatorMock.Object);
-        //                services.AddScoped(_ => userContextMock.Object);
-        //                services.AddScoped(_ => categoryRepositoryMock.Object);
-        //            }))
-        //        .WithWebHostBuilder(builder =>
-        //        {
-        //            builder.ConfigureTestServices(services =>
-        //            {
-        //                services.AddAuthentication(defaultScheme: "TestScheme")
-        //                    .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(
-        //                        "TestScheme", options => { });
-        //            });
-        //        })
-        //        .CreateClient();
+            var command = new CreateCategoryCommand()
+            {
+                Name = "Home"
+            };
 
-        //    client.DefaultRequestHeaders.Authorization =
-        //            new AuthenticationHeaderValue(scheme: "TestScheme");
+            var jsonContent = new StringContent(JsonConvert.SerializeObject(command), Encoding.UTF8, "application/json");
 
-        //    var command = new CreateCategoryCommand()
-        //    {
-        //        Name = "Home"
-        //    };
+            var categories = new Domain.Entities.Category()
+            {
+                Name = "Food"
+            };
 
-        //    var jsonContent = new StringContent(JsonConvert.SerializeObject(command), Encoding.UTF8, "application/json");
+            // act
+            var response = await client.PostAsync("/Category/Create", jsonContent);
 
-        //    // act
-        //    var response = await client.PostAsync("/Category/Create", jsonContent);
+            // assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+        }
 
-        //    // assert
-        //    response.StatusCode.Should().Be(HttpStatusCode.OK);
-        //    //response.Headers.Location.ToString().Should().EndWith("/Category/Index");
+        [Fact()]
+        public async Task Delete_ReturnsView()
+        {
+            // arrange
+            var category = new Domain.Entities.Category()
+            {
+                Name = "home",
+                CreatedById = "1"
+            };
 
-        //    mediatorMock.Verify(m => m.Send(It.IsAny<CreateCategoryCommand>(), default), Times.Once);
-        //}
+            var userContextMock = new Mock<IUserContext>();
 
-        // Testing Delete Category
+            var user = new CurrentUser("1", "test@example.com");
+            userContextMock.Setup(e => e.GetCurrentUser())
+                .Returns(user);
+
+            var categoyRepositoryMock = new Mock<ICategoryRepository>();
+            categoyRepositoryMock.Setup(c => c.GetByEncodedName(category.EncodedName, user.Id))
+                .ReturnsAsync(category);
+
+            var client = _factory
+                .WithWebHostBuilder(builder =>
+                {
+                    builder.ConfigureTestServices(services =>
+                    {
+                        services.AddScoped(_ => userContextMock.Object);
+                        services.AddScoped(_ => categoyRepositoryMock.Object);
+
+                        services.AddAuthentication(defaultScheme: "TestScheme")
+                            .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(
+                                "TestScheme", options => { });
+                    });
+                })
+                .CreateClient();
+
+            client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue(scheme: "TestScheme");
+
+            // act
+            var response = await client.GetAsync($"/Category/Delete/home");
+
+            // assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+            var content = await response.Content.ReadAsStringAsync();
+
+            content.Should().Contain("<h1>Delete</h1>");
+        }
+
+        [Fact()]
+        public async Task Delete_ReturnsView_WithNoAccess()
+        {
+            // arrange
+            var category = new Domain.Entities.Category()
+            {
+                Name = "home",
+                CreatedById = "1"
+            };
+
+            var client = _factory
+                .WithWebHostBuilder(builder =>
+                {
+                    builder.ConfigureTestServices(services =>
+                    {
+                        services.AddAuthentication(defaultScheme: "TestScheme")
+                            .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(
+                                "TestScheme", options => { });
+                    });
+                })
+                .CreateClient();
+
+            client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue(scheme: "TestScheme");
+
+            // act
+            var response = await client.GetAsync($"/Category/Delete/home");
+
+            // assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+            var content = await response.Content.ReadAsStringAsync();
+
+            content.Should().Contain("<h1 class=\"card-title text-danger\">You have no access to this resource</h1>");
+        }
+
+        [Fact()]
+        public async Task Delete_DeletingCategory()
+        {
+            // arrange
+            var category = new Domain.Entities.Category()
+            {
+                Name = "home",
+                CreatedById = "1"
+            };
+
+            var userContextMock = new Mock<IUserContext>();
+
+            var user = new CurrentUser("1", "test@example.com");
+            userContextMock.Setup(e => e.GetCurrentUser())
+                .Returns(user);
+
+            var categoyRepositoryMock = new Mock<ICategoryRepository>();
+            categoyRepositoryMock.Setup(c => c.GetByEncodedName(category.EncodedName, user.Id))
+                .ReturnsAsync(category);
+
+            var client = _factory
+                .WithWebHostBuilder(builder =>
+                {
+                    builder.ConfigureTestServices(services =>
+                    {
+                        services.AddScoped(_ => userContextMock.Object);
+                        services.AddScoped(_ => categoyRepositoryMock.Object);
+
+                        services.AddAuthentication(defaultScheme: "TestScheme")
+                            .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(
+                                "TestScheme", options => { });
+                    });
+                })
+                .CreateClient();
+
+            client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue(scheme: "TestScheme");
+
+            // act
+            var response = await client.DeleteAsync($"/Category/Delete/home");
+
+            // assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+        }
     }
 }
