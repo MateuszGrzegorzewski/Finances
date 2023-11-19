@@ -1,5 +1,7 @@
 ﻿using Finances.Application.ApplicationUser;
+using Finances.Application.Expense;
 using Finances.Application.Expense.Commands.CreateExpense;
+using Finances.Application.Expense.Query.GetAllExpenses;
 using Finances.Application.Expense.Query.GetByIdExpense;
 using Finances.Domain.Interfaces;
 using FluentAssertions;
@@ -53,9 +55,298 @@ namespace Finances.MVC.Controllers.Tests
             }
         }
 
-        // Testing Index
+        [Fact()]
+        public async Task Index_ReturnView()
+        {
+            var client = _factory
+             .WithWebHostBuilder(builder =>
+             {
+                 builder.ConfigureTestServices(services =>
+                 {
+                     services.AddAuthentication(defaultScheme: "TestScheme")
+                         .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(
+                             "TestScheme", options => { });
+                 });
+             })
+             .CreateClient();
 
-        // End of testing Index
+            client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue(scheme: "TestScheme");
+
+            // act
+            var response = await client.GetAsync("/Expense");
+
+            // assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+            var content = await response.Content.ReadAsStringAsync();
+
+            content.Should().Contain("<h1>Expenses</h1>");
+        }
+
+        [Fact()]
+        public async Task Index_ExpensesCalculatedByYear()
+        {
+            // assert
+            var expenses = new List<ExpenseDto>
+            {
+                new ExpenseDto { Value = 14, Category = "Home", CreatedAt = new DateTime(2023, 11, 19) },
+                new ExpenseDto { Value = 19, Category = "Home", CreatedAt = new DateTime(2023, 10, 19) },
+                new ExpenseDto { Value = 3, Category = "Food", CreatedAt = new DateTime(2023, 9, 19) }
+            };
+
+            var mediatorMock = new Mock<IMediator>();
+            mediatorMock.Setup(m => m.Send(It.IsAny<GetAllExpensesQuery>(), It.IsAny<CancellationToken>()))
+                .Returns(Task.FromResult<IEnumerable<ExpenseDto>>(expenses));
+
+            var client = _factory
+                .WithWebHostBuilder(builder =>
+                    builder.ConfigureTestServices(services =>
+                    {
+                        services.AddScoped(_ => mediatorMock.Object);
+                        services.AddAuthentication(defaultScheme: "TestScheme")
+                            .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(
+                                "TestScheme", options => { });
+                    }))
+                .CreateClient();
+
+            client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue(scheme: "TestScheme");
+
+            // act
+            var response = await client.GetAsync("/Expense?targetYear=2023");
+
+            // assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+            var content = await response.Content.ReadAsStringAsync();
+
+            content.Should().Contain("<h1>Expenses</h1>")
+                .And.Contain("<div class=\"text-end\">33</div>")
+                .And.Contain("<div class=\"text-end\">3</div>")
+                .And.Contain("<div>Total: </div>")
+                .And.Contain("<div class=\"text-end\">36  </div>");
+        }
+
+        [Fact()]
+        public async Task Index_ExpensesCalculatedByLastMonths()
+        {
+            // assert
+            var expenses = new List<ExpenseDto>
+            {
+                new ExpenseDto { Value = 15, Category = "Home", CreatedAt = DateTime.Now.AddDays(-30) },
+                new ExpenseDto { Value = 17, Category = "Home", CreatedAt = DateTime.Now.AddDays(-10) },
+                new ExpenseDto { Value = 3, Category = "Food", CreatedAt = DateTime.Now.AddDays(-20) }
+            };
+
+            var mediatorMock = new Mock<IMediator>();
+            mediatorMock.Setup(m => m.Send(It.IsAny<GetAllExpensesQuery>(), It.IsAny<CancellationToken>()))
+                .Returns(Task.FromResult<IEnumerable<ExpenseDto>>(expenses));
+
+            var client = _factory
+                .WithWebHostBuilder(builder =>
+                    builder.ConfigureTestServices(services =>
+                    {
+                        services.AddScoped(_ => mediatorMock.Object);
+                        services.AddAuthentication(defaultScheme: "TestScheme")
+                            .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(
+                                "TestScheme", options => { });
+                    }))
+                .CreateClient();
+
+            client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue(scheme: "TestScheme");
+
+            // act
+            var response = await client.GetAsync("/Expense?targetNumOfMonths=3");
+
+            // assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+            var content = await response.Content.ReadAsStringAsync();
+
+            content.Should().Contain("<h1>Expenses</h1>")
+                .And.Contain("<div class=\"text-end\">32</div>")
+                .And.Contain("<div class=\"text-end\">3</div>")
+                .And.Contain("<div>Total: </div>")
+                .And.Contain("<div class=\"text-end\"> 35 </div>");
+        }
+
+        [Fact()]
+        public async Task Index_ExpensesCalculatedByCustomDate()
+        {
+            // assert
+            var expenses = new List<ExpenseDto>
+            {
+                new ExpenseDto { Value = 16, Category = "Home", CreatedAt = new DateTime(2023, 11, 19) },
+                new ExpenseDto { Value = 17, Category = "Home", CreatedAt = new DateTime(2023, 11, 17) },
+                new ExpenseDto { Value = 3, Category = "Food", CreatedAt = new DateTime(2023, 11, 12) }
+            };
+
+            var mediatorMock = new Mock<IMediator>();
+            mediatorMock.Setup(m => m.Send(It.IsAny<GetAllExpensesQuery>(), It.IsAny<CancellationToken>()))
+                .Returns(Task.FromResult<IEnumerable<ExpenseDto>>(expenses));
+
+            var client = _factory
+                .WithWebHostBuilder(builder =>
+                    builder.ConfigureTestServices(services =>
+                    {
+                        services.AddScoped(_ => mediatorMock.Object);
+                        services.AddAuthentication(defaultScheme: "TestScheme")
+                            .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(
+                                "TestScheme", options => { });
+                    }))
+                .CreateClient();
+
+            client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue(scheme: "TestScheme");
+
+            // act
+            var response = await client.GetAsync("/Expense?startDate=2023-11-02&endDate=2023-11-19");
+
+            // assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+            var content = await response.Content.ReadAsStringAsync();
+
+            content.Should().Contain("<h1>Expenses</h1>")
+                .And.Contain("<div class=\"text-end\">33</div>")
+                .And.Contain("<div class=\"text-end\">3</div>")
+                .And.Contain("<div>Total: </div>")
+                .And.Contain("<div class=\"text-end\">  36</div>");
+
+            content.Should().Contain("Selected Start Date:")
+                .And.Contain("Selected End Date:");
+        }
+
+        [Fact()]
+        public async Task Index_ExpensesCalculatedNotByCustomDate_NotDisplayingSelectedStartAndEndDate()
+        {
+            // assert
+            var expenses = new List<ExpenseDto>
+            {
+                new ExpenseDto { Value = 14, Category = "Home", CreatedAt = new DateTime(2023, 11, 19) },
+                new ExpenseDto { Value = 19, Category = "Home", CreatedAt = new DateTime(2023, 10, 19) },
+                new ExpenseDto { Value = 3, Category = "Food", CreatedAt = new DateTime(2023, 9, 19) }
+            };
+
+            var mediatorMock = new Mock<IMediator>();
+            mediatorMock.Setup(m => m.Send(It.IsAny<GetAllExpensesQuery>(), It.IsAny<CancellationToken>()))
+                .Returns(Task.FromResult<IEnumerable<ExpenseDto>>(expenses));
+
+            var client = _factory
+                .WithWebHostBuilder(builder =>
+                    builder.ConfigureTestServices(services =>
+                    {
+                        services.AddScoped(_ => mediatorMock.Object);
+                        services.AddAuthentication(defaultScheme: "TestScheme")
+                            .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(
+                                "TestScheme", options => { });
+                    }))
+                .CreateClient();
+
+            client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue(scheme: "TestScheme");
+
+            // act
+            var response = await client.GetAsync("/Expense?targetYear=2023");
+
+            // assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+            var content = await response.Content.ReadAsStringAsync();
+
+            content.Should().Contain("<h1>Expenses</h1>");
+
+            content.Should().NotContain("Selected Start Date:")
+                .And.NotContain("Selected End Date:");
+        }
+
+        [Fact()]
+        public async Task Index_ExpensesNotCalculated_NotDisplayingTotalExpenses()
+        {
+            // assert
+            var expenses = new List<ExpenseDto>
+            {
+                new ExpenseDto { Value = 14, Category = "Home", CreatedAt = new DateTime(2023, 11, 19) },
+                new ExpenseDto { Value = 19, Category = "Home", CreatedAt = new DateTime(2023, 10, 19) },
+                new ExpenseDto { Value = 3, Category = "Food", CreatedAt = new DateTime(2023, 9, 19) }
+            };
+
+            var mediatorMock = new Mock<IMediator>();
+            mediatorMock.Setup(m => m.Send(It.IsAny<GetAllExpensesQuery>(), It.IsAny<CancellationToken>()))
+                .Returns(Task.FromResult<IEnumerable<ExpenseDto>>(expenses));
+
+            var client = _factory
+                .WithWebHostBuilder(builder =>
+                    builder.ConfigureTestServices(services =>
+                    {
+                        services.AddScoped(_ => mediatorMock.Object);
+                        services.AddAuthentication(defaultScheme: "TestScheme")
+                            .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(
+                                "TestScheme", options => { });
+                    }))
+                .CreateClient();
+
+            client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue(scheme: "TestScheme");
+
+            // act
+            var response = await client.GetAsync("/Expense");
+
+            // assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+            var content = await response.Content.ReadAsStringAsync();
+
+            content.Should().Contain("<h1>Expenses</h1>");
+
+            content.Should().NotContain("<div>Total: </div>");
+        }
+
+        [Fact()]
+        public async Task Index_DisplayingPagination()
+        {
+            // assert
+            var expenses = new List<ExpenseDto>
+            {
+                new ExpenseDto { Value = 14, Category = "Home", CreatedAt = new DateTime(2023, 11, 19) },
+                new ExpenseDto { Value = 19, Category = "Home", CreatedAt = new DateTime(2023, 10, 19) },
+                new ExpenseDto { Value = 3, Category = "Food", CreatedAt = new DateTime(2023, 9, 19) }
+            };
+
+            var mediatorMock = new Mock<IMediator>();
+            mediatorMock.Setup(m => m.Send(It.IsAny<GetAllExpensesQuery>(), It.IsAny<CancellationToken>()))
+                .Returns(Task.FromResult<IEnumerable<ExpenseDto>>(expenses));
+
+            var client = _factory
+                .WithWebHostBuilder(builder =>
+                    builder.ConfigureTestServices(services =>
+                    {
+                        services.AddScoped(_ => mediatorMock.Object);
+                        services.AddAuthentication(defaultScheme: "TestScheme")
+                            .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(
+                                "TestScheme", options => { });
+                    }))
+                .CreateClient();
+
+            client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue(scheme: "TestScheme");
+
+            // act
+            var response = await client.GetAsync("/Expense?targetYear=2023");
+
+            // assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+
+            var content = await response.Content.ReadAsStringAsync();
+
+            content.Should().Contain("<h1>Expenses</h1>");
+
+            content.Should().Contain("<span class=\"page-link\" aria-hidden=\"true\">&laquo;&laquo;</span>")
+                .And.Contain("<span class=\"page-link\" aria-hidden=\"true\">&raquo;</span>")
+                .And.Contain("<a class=\"page-link\" href=\"/Expense?page=1\">1</a>");
+        }
 
         [Fact()]
         public async Task Create_ReturnView()

@@ -1,13 +1,7 @@
-﻿using Xunit;
-using Finances.Controllers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FluentAssertions;
-using System.Net;
+﻿using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
+using System.Net;
+using Xunit;
 
 namespace Finances.Controllers.Tests
 {

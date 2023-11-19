@@ -1,17 +1,10 @@
-﻿using Xunit;
-using Finances.Application.Category.Query.GetAllCategories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Finances.Application.ApplicationUser;
-using Finances.Application.Expense.Query.GetAllExpenses;
 using Finances.Application.Mappings;
 using Finances.Domain.Interfaces;
-using Moq;
 using FluentAssertions;
+using Moq;
+using Xunit;
 
 namespace Finances.Application.Category.Query.GetAllCategories.Tests
 {
