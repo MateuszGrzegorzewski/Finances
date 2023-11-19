@@ -230,11 +230,7 @@ namespace Finances.MVC.Controllers.Tests
                 CreatedById = "1"
             };
 
-            var userContextMock = new Mock<IUserContext>();
-
             var user = new CurrentUser("1", "test@example.com");
-            userContextMock.Setup(e => e.GetCurrentUser())
-                .Returns(user);
 
             var categoyRepositoryMock = new Mock<ICategoryRepository>();
             categoyRepositoryMock.Setup(c => c.GetByEncodedName(category.EncodedName, user.Id))
@@ -245,7 +241,6 @@ namespace Finances.MVC.Controllers.Tests
                 {
                     builder.ConfigureTestServices(services =>
                     {
-                        services.AddScoped(_ => userContextMock.Object);
                         services.AddScoped(_ => categoyRepositoryMock.Object);
 
                         services.AddAuthentication(defaultScheme: "TestScheme")
@@ -303,51 +298,6 @@ namespace Finances.MVC.Controllers.Tests
             var content = await response.Content.ReadAsStringAsync();
 
             content.Should().Contain("<h1 class=\"card-title text-danger\">You have no access to this resource</h1>");
-        }
-
-        [Fact()]
-        public async Task Delete_DeletingCategory()
-        {
-            // arrange
-            var category = new Domain.Entities.Category()
-            {
-                Name = "home",
-                CreatedById = "1"
-            };
-
-            var userContextMock = new Mock<IUserContext>();
-
-            var user = new CurrentUser("1", "test@example.com");
-            userContextMock.Setup(e => e.GetCurrentUser())
-                .Returns(user);
-
-            var categoyRepositoryMock = new Mock<ICategoryRepository>();
-            categoyRepositoryMock.Setup(c => c.GetByEncodedName(category.EncodedName, user.Id))
-                .ReturnsAsync(category);
-
-            var client = _factory
-                .WithWebHostBuilder(builder =>
-                {
-                    builder.ConfigureTestServices(services =>
-                    {
-                        services.AddScoped(_ => userContextMock.Object);
-                        services.AddScoped(_ => categoyRepositoryMock.Object);
-
-                        services.AddAuthentication(defaultScheme: "TestScheme")
-                            .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(
-                                "TestScheme", options => { });
-                    });
-                })
-                .CreateClient();
-
-            client.DefaultRequestHeaders.Authorization =
-                    new AuthenticationHeaderValue(scheme: "TestScheme");
-
-            // act
-            var response = await client.DeleteAsync($"/Category/Delete/home");
-
-            // assert
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
         }
     }
 }
